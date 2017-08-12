@@ -40,6 +40,21 @@ if (DOXYGEN_FOUND)
     endif ()
 endif ()
 
+option(EXPERIMENTAL_FORCE_TESTING "force the building of tests" ON)
+if (EXPERIMENTAL_FORCE_TESTING)
+    hunter_add_package(GTest)
+endif ()
+
+find_package(GTest CONFIG QUIET)
+if (TARGET GTest::gtest)
+    enable_testing()
+    sugar_include(tests)
+    add_executable(experimental-test-suite ${TEST_SOURCES})
+    target_link_libraries(experimental-test-suite GTest::main experimental)
+    add_test(ExperimentalTests experimental-test-suite)
+endif ()
+
+
 report(CMAKE_HOST_SYSTEM_NAME)
 report(CMAKE_HOST_SYSTEM_VERSION)
 report(CMAKE_HOST_SYSTEM_PROCESSOR)
